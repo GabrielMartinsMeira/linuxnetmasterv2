@@ -172,8 +172,7 @@ for i, text in enumerate(texts):
     execute_button = ctk.CTkButton(
         box_frame, 
         text="Habilitar interface", 
-        #command=lambda i=i+1, box=box_frame: [disable(i), change_box_color(box, '#00ff00')], 
-        command=lambda i=i+1, box=box_frame: [disable(i), change_box_color(box, '#329932')], 
+        command=on_execute, 
         width=150, 
         height=30,
         fg_color='#329932', 
