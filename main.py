@@ -165,7 +165,7 @@ for i, text in enumerate(texts):
                 if idx == selected_idx:
                     change_box_color(frame, '#BDBDBD')  # Cor padrão
                 else:
-                    change_box_color(frame, '#474747')  # Cinza escuro
+                    change_box_color(frame, "#585858")  # Cinza escuro
             selected_box[0] = selected_idx
             disable(selected_idx + 1)
 

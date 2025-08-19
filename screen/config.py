@@ -8,21 +8,22 @@ def open_new_window():
     import os
 
     # Configurações iniciais
-    ctk.set_appearance_mode("light")
-    ctk.set_default_color_theme("blue")
+    #ctk.set_appearance_mode("light")
+    #ctk.set_default_color_theme("blue")
 
     # Janela principal
     root = ctk.CTk()
     root.title("Configuração")
     root.geometry("400x450")
+    root.configure(fg="#ffffff")
     
     # Não deixa redimencionar a tela
     root.resizable(False, False)
 
     # Função para carregar as informações do arquivo
     def carregar_informacoes():
-        if os.path.exists("/home/tibo/Documentos/LinuxNetMaster/scripts/configuracoes.txt"):
-            with open("/home/tibo/Documentos/LinuxNetMaster/scripts/configuracoes.txt", "r") as file:
+        if os.path.exists("scripts/configuracoes.txt"):
+            with open("scripts/configuracoes.txt", "r") as file:
                 lines = file.readlines()
                 if len(lines) >= 4:
                     entry1.insert(0, lines[0].strip().split(": ")[1])
@@ -37,7 +38,7 @@ def open_new_window():
         item3 = entry3.get()
         item4 = entry4.get()
 
-        with open("/home/tibo/Documentos/LinuxNetMaster/scripts/configuracoes.txt", "w") as file:
+        with open("scripts/configuracoes.txt", "w") as file:
             file.write(f"Interface AC: {item1}\n")
             file.write(f"Interface AX: {item2}\n")
             file.write(f"Interface USB: {item3}\n")
@@ -45,26 +46,26 @@ def open_new_window():
         print("Informações salvas com sucesso!")
         root.destroy()
     # Frame para as entradas
-    frame = ctk.CTkFrame(root, corner_radius=10)
+    frame = ctk.CTkFrame(root, corner_radius=10, fg_color="#D9D9D9")
     frame.pack(pady=20, padx=20, fill="both", expand=True)
 
     # Entradas de texto
-    label1 = ctk.CTkLabel(frame, text="Interface AC:")
+    label1 = ctk.CTkLabel(frame, text="Interface AC:", color="#000000")
     label1.pack(pady=5)
     entry1 = ctk.CTkEntry(frame)
     entry1.pack(pady=5)
 
-    label2 = ctk.CTkLabel(frame, text="Interface AX:")
+    label2 = ctk.CTkLabel(frame, text="Interface AX:", color="#000000")
     label2.pack(pady=5)
     entry2 = ctk.CTkEntry(frame)
     entry2.pack(pady=5)
 
-    label3 = ctk.CTkLabel(frame, text="Interface USB:")
+    label3 = ctk.CTkLabel(frame, text="Interface USB:", color="#000000")
     label3.pack(pady=5)
     entry3 = ctk.CTkEntry(frame)
     entry3.pack(pady=5)
     
-    label4 = ctk.CTkLabel(frame, text="Interface LAN:")
+    label4 = ctk.CTkLabel(frame, text="Interface LAN:", color="#000000")
     label4.pack(pady=5)
     entry4 = ctk.CTkEntry(frame)
     entry4.pack(pady=5)
