@@ -6,7 +6,6 @@ from PIL import Image
 from os import path, getcwd
 from screen.config import open_new_window
 from screen.ips import openipview
-from screen.plug_iperf import open_plug_iperf_window
 
 # Configurações iniciais
 ctk.set_appearance_mode("dark")  # Modo escuro
@@ -22,11 +21,10 @@ def iperf():
         
 def iperf_plug(MainWindow):
     try:
-        #open_plug_iperf_window(MainWindow)
         subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "create_namespace.sh")], check=True)
-
+        print("Criando namespaces")
         process = subprocess.Popen(
-                ["gnome-terminal", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"],  # Windows example
+                ["gnome-terminal", "--wait", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"],  # Windows example
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -36,11 +34,10 @@ def iperf_plug(MainWindow):
             print(line, end="")
             
         process.wait()
-        print("Finished")
+        print("Terminal Fechado")
         subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "disable_namespace.sh")], check=True)
         
         #subprocess.run(["gnome-terminal", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"], check=True)
-        #print("Terminal GNOME iniciado com o comando `ls`.")
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o comando: {e}")
 
@@ -112,17 +109,17 @@ def disable(i):
     try:
         # Executa o script disable_interfaces.sh
         subprocess.run(["/bin/bash", path.join("scripts", "disable_interfaces.sh"), str(i)], check=True)
-        print("Script executado com sucesso!", i)
+        print("Desabilitando interfaces...", i)
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o script: {e}")
     
 
  # Função para reset das interfaces de rede
-def reset(i):
+def reset():
     try:
         # Executa o script reset_script.sh
         subprocess.run(["/bin/bash", path.join("scripts", "reset_all.sh"), str(i)], check=True)
-        print("Script executado com sucesso!", i)
+        print("Resetando interfaces...")
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o script: {e}")
         
@@ -182,6 +179,7 @@ for i, text in enumerate(texts):
                 button.configure(fg_color="#329932", hover_color='#227422', text="Habilitar interface", state="normal")
                 
             selected_box[0] = None
+            reset()
             
         else:
             for idx, frame in enumerate(box_frames):
