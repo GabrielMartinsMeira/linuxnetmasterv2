@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Caminho para o arquivo de configuração
-config_file="/home/tibo/Documentos/LinuxNetMaster/scripts/configuracoes.txt"
+current_dir=$(pwd)  # get current working directory
+config_file="$current_dir/scripts/configuracoes.txt"
+# config_file="/home/tibo/Documentos/LinuxNetMaster/scripts/configuracoes.txt"
 
 # Ler os valores do arquivo de configuração
 interface_ac=$(grep "Interface AC:" "$config_file" | cut -d':' -f2 | xargs)

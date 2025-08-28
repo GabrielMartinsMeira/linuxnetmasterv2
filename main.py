@@ -1,10 +1,12 @@
 import customtkinter as ctk
 import tkinter as tk
 import subprocess
+import asyncio
 from PIL import Image
+from os import path, getcwd
 from screen.config import open_new_window
 from screen.ips import openipview
-
+from screen.plug_iperf import open_plug_iperf_window
 
 # Configurações iniciais
 ctk.set_appearance_mode("dark")  # Modo escuro
@@ -18,10 +20,22 @@ def iperf():
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o comando: {e}")
         
-def iperf_plug():
+def iperf_plug(MainWindow):
     try:
+        open_plug_iperf_window(MainWindow)
         # Executa o comando para abrir o terminal e listar o conteúdo
-        subprocess.run(["gnome-terminal", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"], check=True)
+        # process = subprocess.Popen(
+        #     ["ping", "google.com", "-n", "5"],  # Windows example
+        #     stdout=subprocess.PIPE,
+        #     stderr=subprocess.STDOUT,
+        #     text=True,
+        #     bufsize=1
+        # )
+        # for line in process.stdout:
+        #     print(line, end="")
+            
+        # process.wait()
+        #subprocess.run(["gnome-terminal", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"], check=True)
         print("Terminal GNOME iniciado com o comando `ls`.")
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o comando: {e}")
@@ -36,20 +50,20 @@ root.configure(bg="#000000")
 root.resizable(False, False)
 
 # Carregar as imagens
-folder_image_path = "img/AQlogo.png"
-image_path = ctk.CTkImage(light_image=Image.open(folder_image_path), size=(40, 40))
+#folder_image_path = "img/AQlogo.png"
+image_path = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "AQlogo.png")), size=(40, 40))
 
-folder_image_chave = "img/chave.png"
-image_chave = ctk.CTkImage(light_image=Image.open(folder_image_chave), size=(35, 35))
+#folder_image_chave = "img/chave.png"
+image_chave = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "chave.png")), size=(35, 35))
 
-folder_image_iperf = "img/iperf.png"
-image_iperf = ctk.CTkImage(light_image=Image.open(folder_image_iperf), size=(35, 30))
+#folder_image_iperf = "img/iperf.png"
+image_iperf = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "iperf.png")), size=(35, 30))
 
-folder_image_iperf_plug = "img/plug.png"
-image_iperf_plug = ctk.CTkImage(light_image=Image.open(folder_image_iperf_plug), size=(55, 55))
+#folder_image_iperf_plug = "img/plug.png"
+image_iperf_plug = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "plug.png")), size=(55, 55))
 
-folder_ips = "img/IPs.png"
-image_ips = ctk.CTkImage(light_image=Image.open(folder_ips), size=(25, 45))
+#folder_ips = "img/IPs.png"
+image_ips = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "IPs.png")), size=(25, 45))
 
 # Frame superior
 top_frame = ctk.CTkFrame(root, fg_color='#65B46B', corner_radius=0, height=100)
@@ -73,7 +87,7 @@ button_conf.pack(pady=25, padx=10)
 button_iperf = ctk.CTkButton(left_frame, image=image_iperf, text="", command=iperf, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_iperf.pack(pady=25, padx=10)
 
-button_iperf = ctk.CTkButton(left_frame, image=image_iperf_plug, text="", command=iperf_plug, width=0, height=0, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
+button_iperf = ctk.CTkButton(left_frame, image=image_iperf_plug, text="", command=lambda *args: iperf_plug(root), width=0, height=0, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_iperf.pack(pady=25, padx=10)
 
 button_ip = ctk.CTkButton(left_frame, image=image_ips, text="", command=openipview, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
@@ -93,7 +107,7 @@ texts = [
 def disable(i):
     try:
         # Executa o script disable_interfaces.sh
-        subprocess.run(["/bin/bash", "scripts/disable_interfaces.sh", str(i)], check=True)
+        subprocess.run(["/bin/bash", path.join("scripts", "disable_interfaces.sh"), str(i)], check=True)
         print("Script executado com sucesso!", i)
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o script: {e}")
@@ -103,7 +117,7 @@ def disable(i):
 def reset(i):
     try:
         # Executa o script reset_script.sh
-        subprocess.run(["/bin/bash", "scripts/reset_all.sh", str(i)], check=True)
+        subprocess.run(["/bin/bash", path.join("scripts", "reset_all.sh"), str(i)], check=True)
         print("Script executado com sucesso!", i)
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o script: {e}")
@@ -117,6 +131,7 @@ row = 0
 column = 0
 box_frames = []  # Lista para armazenar os frames
 selected_box = [None]  # Usando lista mutável para referência
+buttons = []
 
 for i, text in enumerate(texts):
     if column == 3:  # Ajusta para 3 colunas
@@ -159,13 +174,21 @@ for i, text in enumerate(texts):
             # Se já está selecionado, reseta todos
             for frame in box_frames:
                 change_box_color(frame, '#BDBDBD')
+            for button in buttons:
+                button.configure(fg_color="#329932", hover_color='#227422', text="Habilitar interface", state="normal")
+                
             selected_box[0] = None
+            
         else:
             for idx, frame in enumerate(box_frames):
                 if idx == selected_idx:
                     change_box_color(frame, '#BDBDBD')  # Cor padrão
+                    buttons[selected_idx].configure(fg_color="#C23434", hover_color="#971818", text="Desabilitar interface")
+                    
                 else:
                     change_box_color(frame, "#585858")  # Cinza escuro
+                    buttons[idx].configure(state='disabled')
+                    
             selected_box[0] = selected_idx
             disable(selected_idx + 1)
 
@@ -182,7 +205,8 @@ for i, text in enumerate(texts):
         corner_radius=10
     )
     execute_button.pack(pady=(50, 0))
-
+    buttons.append(execute_button)
+    
     label_id = ctk.CTkLabel(box_frame, text=["ID:", (i+1)], fg_color='#BDBDBD', text_color='black', font=("Arial", 14), corner_radius=30, height=30, width=180)
     label_id.pack(fill=ctk.X, pady=(10, 10), padx=(10, 10))
 
