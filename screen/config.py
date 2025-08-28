@@ -4,12 +4,7 @@ from PIL import Image
 from os import path, getcwd
 
 def open_new_window():
-    import customtkinter as ctk
-
-    # Configurações iniciais
-    #ctk.set_appearance_mode("light")
-    #ctk.set_default_color_theme("blue")
-
+    
     # Janela principal
     root = ctk.CTk()
     root.title("Configuração")
@@ -18,17 +13,21 @@ def open_new_window():
     
     # Não deixa redimencionar a tela
     root.resizable(False, False)
-
+    
+    # Pega o nome da interface de configurações.txt e retorna o mesmo 
+    def get_interface_line(string):
+        before, sep, after = string.strip().partition(":")
+        return after.strip()
+    
     # Função para carregar as informações do arquivo
     def carregar_informacoes():
         if path.exists(path.join(getcwd(), "scripts", "configuracoes.txt")):
             with open(path.join(getcwd(), "scripts", "configuracoes.txt"), "r") as file:
                 lines = file.readlines()
-                if len(lines) >= 4:
-                    entry1.insert(0, lines[0].strip().split(": ")[1])
-                    entry2.insert(0, lines[1].strip().split(": ")[1])
-                    entry3.insert(0, lines[2].strip().split(": ")[1])
-                    entry4.insert(0, lines[3].strip().split(": ")[1])
+                entry1.insert(0, get_interface_line(lines[0]))
+                entry2.insert(0, get_interface_line(lines[1]))
+                entry3.insert(0, get_interface_line(lines[2]))
+                entry4.insert(0, get_interface_line(lines[3]))
 
     # Função para salvar as informações em um arquivo
     def salvar_informacoes():

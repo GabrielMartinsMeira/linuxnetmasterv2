@@ -1,7 +1,5 @@
 import customtkinter as ctk
-import tkinter as tk
 import subprocess
-import asyncio
 from PIL import Image
 from os import path, getcwd
 from screen.config import open_new_window
@@ -9,7 +7,6 @@ from screen.ips import openipview
 
 # Configurações iniciais
 ctk.set_appearance_mode("dark")  # Modo escuro
-#ctk.set_default_color_theme("red")  # Tema vermelho
 
 def iperf():
     try:
@@ -19,7 +16,7 @@ def iperf():
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o comando: {e}")
         
-def iperf_plug(MainWindow):
+def iperf_plug():
     try:
         subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "create_namespace.sh")], check=True)
         print("Criando namespaces")
@@ -88,7 +85,7 @@ button_conf.pack(pady=25, padx=10)
 button_iperf = ctk.CTkButton(left_frame, image=image_iperf, text="", command=iperf, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_iperf.pack(pady=25, padx=10)
 
-button_iperf = ctk.CTkButton(left_frame, image=image_iperf_plug, text="", command=lambda *args: iperf_plug(root), width=0, height=0, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
+button_iperf = ctk.CTkButton(left_frame, image=image_iperf_plug, text="", command=iperf_plug, width=0, height=0, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_iperf.pack(pady=25, padx=10)
 
 button_ip = ctk.CTkButton(left_frame, image=image_ips, text="", command=openipview, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
@@ -126,8 +123,6 @@ def reset():
 def change_box_color(box_frame, color):
     box_frame.configure(fg_color=color)
 
-
-
 row = 0
 column = 0
 box_frames = []  # Lista para armazenar os frames
@@ -145,29 +140,6 @@ for i, text in enumerate(texts):
 
     label = ctk.CTkLabel(box_frame, text=text, fg_color='white', text_color='black', font=("Arial", 12), corner_radius=17, height=40, width=100)
     label.pack(fill=ctk.X, pady=(20, 20), padx=(10, 10))
-    #label.pack(fill=ctk.X, pady=(10, 90), padx=(10, 10))
-    
-
-    
-    # Botoes antigos sem alteração da cor na tela.
-    
-    #button = ctk.CTkButton(box_frame, text="Reset", command=lambda i=i+1: reset(i), width=100, height=30, fg_color='white', text_color='black')
-    #button.pack(pady=0)
-
-    #button = ctk.CTkButton(box_frame, text="Execute", command=lambda i=i+1: disable(i), width=100, height=30)
-    #button.pack(pady=8)
-    
-    # Botão de Reset que altera a cor e chama a função reset(i)
-    #reset_button = ctk.CTkButton(
-    #    box_frame, 
-    #    text="Reset", 
-    #    command=lambda i=i+1, box=box_frame: [reset(i), change_box_color(box, '#00c4ff')], 
-    #    width=100, 
-    #    height=30, 
-    #    fg_color='white', 
-    #    text_color='black'
-    #)
-    #reset_button.pack(pady=0)
 
     # Botão de Execute que altera a cor e chama a função disable(i)
     def on_execute(selected_idx=i):
@@ -213,6 +185,5 @@ for i, text in enumerate(texts):
     label_id.pack(fill=ctk.X, pady=(10, 10), padx=(10, 10))
 
     column += 1
-
 
 root.mainloop()

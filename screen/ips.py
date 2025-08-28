@@ -4,8 +4,6 @@ import threading
 from os import path, getcwd
 
 def openipview():
-    import os
-
     # Função para consultar o IP de uma interface usando ifconfig
     def consultar_ip(interface):
         try:
