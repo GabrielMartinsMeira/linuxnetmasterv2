@@ -1,4 +1,4 @@
-Interface AC: wlp2s0
-Interface AX: wlp3s0
-Interface USB: wlxd
-Interface LAN: enp4s0
+Interface AC: 
+Interface AX: 
+Interface USB: 
+Interface LAN: 

@@ -21,7 +21,7 @@ def open_new_window():
 
     # Função para carregar as informações do arquivo
     def carregar_informacoes():
-        if path.exists(getcwd(), "scripts", "configuracoes.txt"):
+        if path.exists(path.join(getcwd(), "scripts", "configuracoes.txt")):
             with open(path.join(getcwd(), "scripts", "configuracoes.txt"), "r") as file:
                 lines = file.readlines()
                 if len(lines) >= 4:
@@ -49,22 +49,22 @@ def open_new_window():
     frame.pack(pady=20, padx=20, fill="both", expand=True)
 
     # Entradas de texto
-    label1 = ctk.CTkLabel(frame, text="Interface AC:", color="#000000")
+    label1 = ctk.CTkLabel(frame, text="Interface AC:", text_color="#000000")
     label1.pack(pady=5)
     entry1 = ctk.CTkEntry(frame)
     entry1.pack(pady=5)
 
-    label2 = ctk.CTkLabel(frame, text="Interface AX:", color="#000000")
+    label2 = ctk.CTkLabel(frame, text="Interface AX:", text_color="#000000")
     label2.pack(pady=5)
     entry2 = ctk.CTkEntry(frame)
     entry2.pack(pady=5)
 
-    label3 = ctk.CTkLabel(frame, text="Interface USB:", color="#000000")
+    label3 = ctk.CTkLabel(frame, text="Interface USB:", text_color="#000000")
     label3.pack(pady=5)
     entry3 = ctk.CTkEntry(frame)
     entry3.pack(pady=5)
     
-    label4 = ctk.CTkLabel(frame, text="Interface LAN:", color="#000000")
+    label4 = ctk.CTkLabel(frame, text="Interface LAN:", text_color="#000000")
     label4.pack(pady=5)
     entry4 = ctk.CTkEntry(frame)
     entry4.pack(pady=5)
