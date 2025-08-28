@@ -1,13 +1,13 @@
 import customtkinter as ctk
 import subprocess
 import threading
-from os import path
+from os import path, getcwd
 
 def run_iperf_server(textbox):
-    subprocess.run(["/bin/bash", path.join("scripts", "create_namespace.sh")], check=True)
+    subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "create_namespace.sh")], check=True)
     
     process = subprocess.Popen(
-            ["gnome-terminal", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"],  # Windows example
+            ["sudo ip netns exec lan iperf3 -s"],  # Windows example
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,

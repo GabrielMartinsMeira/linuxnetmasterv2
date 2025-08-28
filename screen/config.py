@@ -1,11 +1,10 @@
 import customtkinter as ctk
 import tkinter as tk
 from PIL import Image
-
+from os import path, getcwd
 
 def open_new_window():
     import customtkinter as ctk
-    import os
 
     # Configurações iniciais
     #ctk.set_appearance_mode("light")
@@ -22,8 +21,8 @@ def open_new_window():
 
     # Função para carregar as informações do arquivo
     def carregar_informacoes():
-        if os.path.exists("scripts/configuracoes.txt"):
-            with open("scripts/configuracoes.txt", "r") as file:
+        if path.exists(getcwd(), "scripts", "configuracoes.txt"):
+            with open(path.join(getcwd(), "scripts", "configuracoes.txt"), "r") as file:
                 lines = file.readlines()
                 if len(lines) >= 4:
                     entry1.insert(0, lines[0].strip().split(": ")[1])
@@ -38,7 +37,7 @@ def open_new_window():
         item3 = entry3.get()
         item4 = entry4.get()
 
-        with open("scripts/configuracoes.txt", "w") as file:
+        with open(path.join(getcwd(), "scripts", "configuracoes.txt"), "w") as file:
             file.write(f"Interface AC: {item1}\n")
             file.write(f"Interface AX: {item2}\n")
             file.write(f"Interface USB: {item3}\n")

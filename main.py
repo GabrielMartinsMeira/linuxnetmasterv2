@@ -22,21 +22,25 @@ def iperf():
         
 def iperf_plug(MainWindow):
     try:
-        open_plug_iperf_window(MainWindow)
-        # Executa o comando para abrir o terminal e listar o conteúdo
-        # process = subprocess.Popen(
-        #     ["ping", "google.com", "-n", "5"],  # Windows example
-        #     stdout=subprocess.PIPE,
-        #     stderr=subprocess.STDOUT,
-        #     text=True,
-        #     bufsize=1
-        # )
-        # for line in process.stdout:
-        #     print(line, end="")
+        #open_plug_iperf_window(MainWindow)
+        subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "create_namespace.sh")], check=True)
+
+        process = subprocess.Popen(
+                ["gnome-terminal", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"],  # Windows example
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1
+            )
+        for line in process.stdout:
+            print(line, end="")
             
-        # process.wait()
+        process.wait()
+        print("Finished")
+        subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "disable_namespace.sh")], check=True)
+        
         #subprocess.run(["gnome-terminal", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"], check=True)
-        print("Terminal GNOME iniciado com o comando `ls`.")
+        #print("Terminal GNOME iniciado com o comando `ls`.")
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o comando: {e}")
 
