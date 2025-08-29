@@ -74,7 +74,7 @@ top_frame = ctk.CTkFrame(root, fg_color='#65B46B', corner_radius=0, height=100)
 top_frame.pack(side=ctk.TOP, fill='x', expand=False)
 
 # Adicionando elementos na barra superior
-img_label = ctk.CTkLabel(top_frame, image=image_path, text="", text_color='black', font=("Arial", 16, "bold"))
+img_label = ctk.CTkLabel(top_frame, image=image_path, text="", text_color='black', fg_color="#65B46B", bg_color="#65B46B", font=("Arial", 16, "bold"))
 img_label.pack(side=ctk.LEFT, padx=20, pady=10)
 
 software_name_label = ctk.CTkLabel(top_frame, text="Linux Net Master", text_color='white', font=("Tahoma", 20, "bold"))
