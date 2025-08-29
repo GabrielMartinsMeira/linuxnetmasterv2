@@ -85,7 +85,7 @@ left_frame = ctk.CTkFrame(root, fg_color='#585858', corner_radius=0, width=70)
 left_frame.pack(side=ctk.LEFT, fill=ctk.Y, padx=0, pady=0)
 
 # Botões na barra lateral esquerda
-button_conf = ctk.CTkButton(left_frame, image=image_chave, text="", command=open_new_window, width=10, height=40, fg_color='#585858', text_color='black', hover_color="#727171", corner_radius=8)
+button_conf = ctk.CTkButton(left_frame, image=image_chave, text="", command=lambda: open_new_window(root, button_conf), width=10, height=40, fg_color='#585858', text_color='black', hover_color="#727171", corner_radius=8)
 button_conf.pack(pady=25, padx=10)
 
 button_iperf = ctk.CTkButton(left_frame, image=image_iperf, text="", command=iperf, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
@@ -94,7 +94,7 @@ button_iperf.pack(pady=25, padx=10)
 button_iperf_plug = ctk.CTkButton(left_frame, image=image_iperf_plug, text="", command=lambda: Thread(target=iperf_plug, daemon=True).start(), width=0, height=0, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_iperf_plug.pack(pady=25, padx=10)
 
-button_ip = ctk.CTkButton(left_frame, image=image_ips, text="", command=openipview, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
+button_ip = ctk.CTkButton(left_frame, image=image_ips, text="", command=lambda: openipview(root, button_ip), width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_ip.pack(pady=25, padx=10)
 
 # Frame central para os elementos principais

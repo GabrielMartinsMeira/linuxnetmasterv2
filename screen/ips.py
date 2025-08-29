@@ -3,7 +3,8 @@ import subprocess
 import threading
 from os import path, getcwd
 
-def openipview():
+def openipview(MainWindow, button_ip):
+    button_ip.configure(state="disabled")
     # Função para consultar o IP de uma interface usando ifconfig
     def consultar_ip(interface):
         try:
@@ -59,10 +60,11 @@ def openipview():
         output_textbox.insert(ctk.END, plug + "\n")
 
     # Configuração da interface gráfica
-    app = ctk.CTk()
+    app = ctk.CTkToplevel(MainWindow)
     app.title("Consultor de IPs")
     app.geometry("500x500")
     app.resizable(False, False)  # Janela com tamanho fixo
+    app.attributes("-topmost", True)
 
     # Estilizando o frame principal
     frame = ctk.CTkFrame(app, corner_radius=15)
@@ -84,5 +86,12 @@ def openipview():
                            hover_color="#155ab6", 
                            command=lambda: threading.Thread(target=consultar_interfaces).start())
     button.pack(pady=20)
-
+    
+    app.protocol("WM_DELETE_WINDOW", lambda: close_ip_window(app, button_ip))
+    
     app.mainloop()
+
+def close_ip_window(app, button_ip):
+    button_ip.configure(state="normal")
+    app.destroy()
+    app = None

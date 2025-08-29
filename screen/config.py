@@ -3,13 +3,14 @@ import tkinter as tk
 from PIL import Image
 from os import path, getcwd
 
-def open_new_window():
-    
+def open_new_window(MainWindow, button_conf):
+    button_conf.configure(state="disabled")
     # Janela principal
-    root = ctk.CTk()
+    root = ctk.CTkToplevel(MainWindow)
     root.title("Configuração")
     root.geometry("400x450")
     root.configure(fg="#ffffff")
+    root.attributes("-topmost", True)
     
     # Não deixa redimencionar a tela
     root.resizable(False, False)
@@ -74,6 +75,13 @@ def open_new_window():
 
     # Carregar informações do arquivo ao iniciar
     carregar_informacoes()
-
+    root.protocol("WM_DELETE_WINDOW", lambda: close_config_window(root, button_conf))
+    
     # Iniciar o loop principal
     root.mainloop()
+
+def close_config_window(root, button_conf):
+    button_conf.configure(state="normal")
+    root.destroy()
+    root = None
+
