@@ -1,35 +1,34 @@
 import customtkinter as ctk
 import tkinter as tk
 from PIL import Image
+from os import path, getcwd
 
-
-def open_new_window():
-    import customtkinter as ctk
-    import os
-
-    # Configurações iniciais
-    #ctk.set_appearance_mode("light")
-    #ctk.set_default_color_theme("blue")
-
+def open_new_window(MainWindow, button_conf):
+    button_conf.configure(state="disabled")
     # Janela principal
-    root = ctk.CTk()
+    root = ctk.CTkToplevel(MainWindow)
     root.title("Configuração")
     root.geometry("400x450")
     root.configure(fg="#ffffff")
+    root.attributes("-topmost", True)
     
     # Não deixa redimencionar a tela
     root.resizable(False, False)
-
+    
+    # Pega o nome da interface de configurações.txt e retorna o mesmo 
+    def get_interface_line(string):
+        before, sep, after = string.strip().partition(":")
+        return after.strip()
+    
     # Função para carregar as informações do arquivo
     def carregar_informacoes():
-        if os.path.exists("scripts/configuracoes.txt"):
-            with open("scripts/configuracoes.txt", "r") as file:
+        if path.exists(path.join(getcwd(), "scripts", "configuracoes.txt")):
+            with open(path.join(getcwd(), "scripts", "configuracoes.txt"), "r") as file:
                 lines = file.readlines()
-                if len(lines) >= 4:
-                    entry1.insert(0, lines[0].strip().split(": ")[1])
-                    entry2.insert(0, lines[1].strip().split(": ")[1])
-                    entry3.insert(0, lines[2].strip().split(": ")[1])
-                    entry4.insert(0, lines[3].strip().split(": ")[1])
+                entry1.insert(0, get_interface_line(lines[0]))
+                entry2.insert(0, get_interface_line(lines[1]))
+                entry3.insert(0, get_interface_line(lines[2]))
+                entry4.insert(0, get_interface_line(lines[3]))
 
     # Função para salvar as informações em um arquivo
     def salvar_informacoes():
@@ -38,7 +37,7 @@ def open_new_window():
         item3 = entry3.get()
         item4 = entry4.get()
 
-        with open("scripts/configuracoes.txt", "w") as file:
+        with open(path.join(getcwd(), "scripts", "configuracoes.txt"), "w") as file:
             file.write(f"Interface AC: {item1}\n")
             file.write(f"Interface AX: {item2}\n")
             file.write(f"Interface USB: {item3}\n")
@@ -50,22 +49,22 @@ def open_new_window():
     frame.pack(pady=20, padx=20, fill="both", expand=True)
 
     # Entradas de texto
-    label1 = ctk.CTkLabel(frame, text="Interface AC:", color="#000000")
+    label1 = ctk.CTkLabel(frame, text="Interface AC:", text_color="#000000")
     label1.pack(pady=5)
     entry1 = ctk.CTkEntry(frame)
     entry1.pack(pady=5)
 
-    label2 = ctk.CTkLabel(frame, text="Interface AX:", color="#000000")
+    label2 = ctk.CTkLabel(frame, text="Interface AX:", text_color="#000000")
     label2.pack(pady=5)
     entry2 = ctk.CTkEntry(frame)
     entry2.pack(pady=5)
 
-    label3 = ctk.CTkLabel(frame, text="Interface USB:", color="#000000")
+    label3 = ctk.CTkLabel(frame, text="Interface USB:", text_color="#000000")
     label3.pack(pady=5)
     entry3 = ctk.CTkEntry(frame)
     entry3.pack(pady=5)
     
-    label4 = ctk.CTkLabel(frame, text="Interface LAN:", color="#000000")
+    label4 = ctk.CTkLabel(frame, text="Interface LAN:", text_color="#000000")
     label4.pack(pady=5)
     entry4 = ctk.CTkEntry(frame)
     entry4.pack(pady=5)
@@ -76,6 +75,13 @@ def open_new_window():
 
     # Carregar informações do arquivo ao iniciar
     carregar_informacoes()
-
+    root.protocol("WM_DELETE_WINDOW", lambda: close_config_window(root, button_conf))
+    
     # Iniciar o loop principal
     root.mainloop()
+
+def close_config_window(root, button_conf):
+    button_conf.configure(state="normal")
+    root.destroy()
+    root = None
+
