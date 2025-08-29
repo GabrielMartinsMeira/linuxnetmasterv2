@@ -19,6 +19,8 @@ def iperf():
 def iperf_plug():
     try:
         subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "create_namespace.sh")], check=True)
+        button_iperf.configure(state='disabled')
+        button_iperf_plug.configure(state='disabled')
         print("Criando namespaces")
         process = subprocess.Popen(
                 ["gnome-terminal", "--wait", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"],  # Windows example
@@ -33,8 +35,9 @@ def iperf_plug():
         process.wait()
         print("Terminal Fechado")
         subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "disable_namespace.sh")], check=True)
+        button_iperf.configure(state='normal')
+        button_iperf_plug.configure(state='normal')
         
-        #subprocess.run(["gnome-terminal", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o comando: {e}")
 
@@ -48,19 +51,10 @@ root.configure(bg="#000000")
 root.resizable(False, False)
 
 # Carregar as imagens
-#folder_image_path = "img/AQlogo.png"
 image_path = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "AQlogo.png")), size=(40, 40))
-
-#folder_image_chave = "img/chave.png"
 image_chave = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "chave.png")), size=(35, 35))
-
-#folder_image_iperf = "img/iperf.png"
 image_iperf = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "iperf.png")), size=(35, 30))
-
-#folder_image_iperf_plug = "img/plug.png"
 image_iperf_plug = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "plug.png")), size=(55, 55))
-
-#folder_ips = "img/IPs.png"
 image_ips = ctk.CTkImage(light_image=Image.open(path.join(getcwd(), "img", "IPs.png")), size=(25, 45))
 
 # Frame superior
@@ -85,8 +79,8 @@ button_conf.pack(pady=25, padx=10)
 button_iperf = ctk.CTkButton(left_frame, image=image_iperf, text="", command=iperf, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_iperf.pack(pady=25, padx=10)
 
-button_iperf = ctk.CTkButton(left_frame, image=image_iperf_plug, text="", command=iperf_plug, width=0, height=0, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
-button_iperf.pack(pady=25, padx=10)
+button_iperf_plug = ctk.CTkButton(left_frame, image=image_iperf_plug, text="", command=iperf_plug, width=0, height=0, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
+button_iperf_plug.pack(pady=25, padx=10)
 
 button_ip = ctk.CTkButton(left_frame, image=image_ips, text="", command=openipview, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_ip.pack(pady=25, padx=10)
