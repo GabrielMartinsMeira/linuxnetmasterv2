@@ -4,6 +4,7 @@ from PIL import Image
 from os import path, getcwd
 from screen.config import open_new_window
 from screen.ips import openipview
+from threading import Thread
 
 # Configurações iniciais
 ctk.set_appearance_mode("dark")  # Modo escuro
@@ -90,7 +91,7 @@ button_conf.pack(pady=25, padx=10)
 button_iperf = ctk.CTkButton(left_frame, image=image_iperf, text="", command=iperf, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_iperf.pack(pady=25, padx=10)
 
-button_iperf_plug = ctk.CTkButton(left_frame, image=image_iperf_plug, text="", command=iperf_plug, width=0, height=0, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
+button_iperf_plug = ctk.CTkButton(left_frame, image=image_iperf_plug, text="", command=lambda: Thread(target=iperf_plug, daemon=True).start(), width=0, height=0, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
 button_iperf_plug.pack(pady=25, padx=10)
 
 button_ip = ctk.CTkButton(left_frame, image=image_ips, text="", command=openipview, width=10, height=40, fg_color='#585858', text_color='black', hover_color='#727171', corner_radius=8)
