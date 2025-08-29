@@ -29,4 +29,4 @@ Linux Net Master é uma interface gráfica desenvolvida em Python usando `custom
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/darckness/LinuxNetMaster.git
+   git clone https://git.intelbras.com.br/jo056377/linuxnetmasterv2.git
