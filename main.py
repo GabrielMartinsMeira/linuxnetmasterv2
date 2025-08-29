@@ -10,18 +10,31 @@ ctk.set_appearance_mode("dark")  # Modo escuro
 
 def iperf():
     try:
-        # Executa o comando para abrir o terminal e listar o conteúdo
-        subprocess.run(["gnome-terminal", "--", "bash", "-c", "iperf3 -s; exec bash"], check=True)
-        print("Terminal GNOME iniciado com o comando `ls`.")
+        button_iperf.configure(state='disabled')
+        button_iperf_plug.configure(state='disabled')
+        process = subprocess.Popen(
+                ["gnome-terminal", "--wait", "--", "bash", "-c", "iperf3 -s; exec bash"],  # Windows example
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1
+            )
+            
+        process.wait()
+        print("Terminal Iperf Fechado")
+        button_iperf.configure(state='normal')
+        button_iperf_plug.configure(state='normal')
+        
     except subprocess.CalledProcessError as e:
         print(f"Erro ao executar o comando: {e}")
         
 def iperf_plug():
     try:
+        print("Criando namespaces")
         subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "create_namespace.sh")], check=True)
+        print("Namespace criado")
         button_iperf.configure(state='disabled')
         button_iperf_plug.configure(state='disabled')
-        print("Criando namespaces")
         process = subprocess.Popen(
                 ["gnome-terminal", "--wait", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"],  # Windows example
                 stdout=subprocess.PIPE,
@@ -29,11 +42,9 @@ def iperf_plug():
                 text=True,
                 bufsize=1
             )
-        for line in process.stdout:
-            print(line, end="")
             
         process.wait()
-        print("Terminal Fechado")
+        print("Terminal Iperf Fechado")
         subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "disable_namespace.sh")], check=True)
         button_iperf.configure(state='normal')
         button_iperf_plug.configure(state='normal')
