@@ -1,4 +1,0 @@
-Interface AC:
-Interface AX: 
-Interface USB: 
-Interface LAN:

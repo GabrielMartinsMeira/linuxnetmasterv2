@@ -2,6 +2,7 @@ import customtkinter as ctk
 import subprocess
 import threading
 from os import path, getcwd
+from config.config import get_iperf_plug_server, load_interfaces
 
 def openipview(MainWindow, button_ip):
     button_ip.configure(state="disabled")
@@ -28,31 +29,30 @@ def openipview(MainWindow, button_ip):
         
     def consultar_ip_plug():
         try:
-            result = subprocess.run(
-                ["sudo", "ip", "netns", "exec", "lan", "ifconfig"],
-                capture_output=True,
-                text=True,
-                timeout=3
-            )
-            if result.returncode == 0:
-                output = result.stdout
-                if 'inet ' in output:
-                    ip_address = output.split('inet ')[1].split(' ')[0]
-                    return f"Interface Plug: {ip_address}"
+            if get_iperf_plug_server():
+                result = subprocess.run(
+                    ["sudo", "ip", "netns", "exec", "lan", "ifconfig"],
+                    capture_output=True,
+                    text=True,
+                    timeout=3
+                )
+                if result.returncode == 0:
+                    output = result.stdout
+                    if 'inet ' in output:
+                        ip_address = output.split('inet ')[1].split(' ')[0]
+                        return f"Interface Plug: {ip_address}"
+                    else:
+                        return f"Interface Plug: Sem IP atribuído"
                 else:
-                    return f"Interface Plug: Sem IP atribuído"
-            else:
-                return f"Interface Plug: Não foi possível consultar"
+                    return f"Interface Plug: Não foi possível consultar"
         except subprocess.TimeoutExpired:
             return f"Interface Plug: Timeout (3s)"
 
     # Função para ler o arquivo e exibir os IPs
     def consultar_interfaces():
-        with open(path.join(getcwd(), "scripts", "configuracoes.txt"), "r") as file:
-            interfaces = [line.split(": ")[1].strip() for line in file.readlines()]
-        
+        interfaces_names = load_interfaces()
         output_textbox.delete(1.0, ctk.END)  # Limpa a área de texto antes de exibir novos resultados
-        for interface in interfaces:
+        for interface in interfaces_names:
             result = consultar_ip(interface)
             output_textbox.insert(ctk.END, result + "\n")
         
