@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import subprocess
 import threading
-from os import path, getcwd
 from config.config import get_iperf_plug_server, load_interfaces
 
 def openipview(MainWindow, button_ip):

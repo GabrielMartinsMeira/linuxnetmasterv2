@@ -3,7 +3,6 @@ import subprocess
 from PIL import Image
 from os import path, getcwd
 from threading import Thread
-from configparser import ConfigParser
 from screen.config_window import open_new_window
 from screen.ip_window import openipview
 from config.config import set_iperf_plug_server

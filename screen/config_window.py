@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from os import path, getcwd
 from config.config import load_interfaces, write_interfaces
 
 def open_new_window(MainWindow, button_conf):
