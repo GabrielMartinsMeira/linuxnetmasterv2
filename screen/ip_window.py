@@ -8,22 +8,21 @@ def openipview(MainWindow, button_ip):
     # Função para consultar o IP de uma interface usando ifconfig
     def consultar_ip(interface):
         try:
-            if interface != "":
-                result = subprocess.run(
-                    ["ifconfig", interface],
-                    capture_output=True,
-                    text=True,
-                    timeout=3
-                )
-                if result.returncode == 0:
-                    output = result.stdout
-                    if 'inet ' in output:
-                        ip_address = output.split('inet ')[1].split(' ')[0]
-                        return f"{interface}: {ip_address}"
-                    else:
-                        return f"{interface}: Sem IP atribuído"
+            result = subprocess.run(
+                ["ifconfig", interface],
+                capture_output=True,
+                text=True,
+                timeout=3
+            )
+            if result.returncode == 0:
+                output = result.stdout
+                if 'inet ' in output:
+                    ip_address = output.split('inet ')[1].split(' ')[0]
+                    return f"{interface}: {ip_address}"
                 else:
-                    return f"{interface}: Não foi possível consultar"
+                    return f"{interface}: Sem IP atribuído"
+            else:
+                return f"{interface}: Não foi possível consultar"
         except subprocess.TimeoutExpired:
             return f"{interface}: Timeout (3s)"
         
@@ -53,8 +52,9 @@ def openipview(MainWindow, button_ip):
         interfaces_names = load_interfaces()
         output_textbox.delete(1.0, ctk.END)  # Limpa a área de texto antes de exibir novos resultados
         for interface in interfaces_names:
-            result = consultar_ip(interface)
-            output_textbox.insert(ctk.END, result + "\n")
+            if interface != "":
+                result = consultar_ip(interface)
+                output_textbox.insert(ctk.END, result + "\n")
         
         plug = consultar_ip_plug()
         output_textbox.insert(ctk.END, plug + "\n")
