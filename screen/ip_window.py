@@ -8,21 +8,22 @@ def openipview(MainWindow, button_ip):
     # Função para consultar o IP de uma interface usando ifconfig
     def consultar_ip(interface):
         try:
-            result = subprocess.run(
-                ["ifconfig", interface],
-                capture_output=True,
-                text=True,
-                timeout=3
-            )
-            if result.returncode == 0:
-                output = result.stdout
-                if 'inet ' in output:
-                    ip_address = output.split('inet ')[1].split(' ')[0]
-                    return f"{interface}: {ip_address}"
+            if interface != "":
+                result = subprocess.run(
+                    ["ifconfig", interface],
+                    capture_output=True,
+                    text=True,
+                    timeout=3
+                )
+                if result.returncode == 0:
+                    output = result.stdout
+                    if 'inet ' in output:
+                        ip_address = output.split('inet ')[1].split(' ')[0]
+                        return f"{interface}: {ip_address}"
+                    else:
+                        return f"{interface}: Sem IP atribuído"
                 else:
-                    return f"{interface}: Sem IP atribuído"
-            else:
-                return f"{interface}: Não foi possível consultar"
+                    return f"{interface}: Não foi possível consultar"
         except subprocess.TimeoutExpired:
             return f"{interface}: Timeout (3s)"
         
