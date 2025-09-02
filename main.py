@@ -32,11 +32,11 @@ def iperf():
         
 def iperf_plug():
     try:
+        button_iperf.configure(state='disabled')
+        button_iperf_plug.configure(state='disabled')
         print("Criando namespaces")
         subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "create_namespace.sh")], check=True)
         print("Namespace criado")
-        button_iperf.configure(state='disabled')
-        button_iperf_plug.configure(state='disabled')
         set_iperf_plug_server("True")
         process = subprocess.Popen(
                 ["gnome-terminal", "--wait", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"],  # Windows example
