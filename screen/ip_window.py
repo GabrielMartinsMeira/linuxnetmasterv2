@@ -18,15 +18,15 @@ def openipview(MainWindow, button_ip):
                 output = result.stdout
                 if 'inet ' in output:
                     ip_address = output.split('inet ')[1].split(' ')[0]
-                    return f"{interface}: {ip_address}"
+                    output_textbox.insert(ctk.END, f"{interface}: {ip_address}" + "\n")
                 else:
-                    return f"{interface}: Sem IP atribuído"
+                    output_textbox.insert(ctk.END, f"{interface}: Sem IP atribuído" + "\n")
             else:
-                return f"{interface}: Não foi possível consultar"
+                output_textbox.insert(ctk.END, f"{interface}: Não foi possível consultar" + "\n")
         except subprocess.TimeoutExpired:
-            return f"{interface}: Timeout (3s)"
+            output_textbox.insert(ctk.END, f"{interface}: Timeout (3s)" + "\n")
         
-    def consultar_ip_plug():
+    def consultar_ip_plug(output_textbox):
         try:
             if get_iperf_plug_server():
                 result = subprocess.run(
@@ -39,25 +39,22 @@ def openipview(MainWindow, button_ip):
                     output = result.stdout
                     if 'inet ' in output:
                         ip_address = output.split('inet ')[1].split(' ')[0]
-                        return f"Interface Plug: {ip_address}"
+                        output_textbox.insert(ctk.END, f"Interface Plug: {ip_address}" + "\n")
                     else:
-                        return f"Interface Plug: Sem IP atribuído"
+                        output_textbox.insert(ctk.END, "Interface Plug: Sem IP atribuído" + "\n")
                 else:
-                    return f"Interface Plug: Não foi possível consultar"
+                    output_textbox.insert(ctk.END, "Interface Plug: Não foi possível consultar" + "\n")
         except subprocess.TimeoutExpired:
-            return f"Interface Plug: Timeout (3s)"
+            output_textbox.insert(ctk.END, "Interface Plug: Timeout (3s)" + "\n")
 
     # Função para ler o arquivo e exibir os IPs
     def consultar_interfaces():
         interfaces_names = load_interfaces()
         output_textbox.delete(1.0, ctk.END)  # Limpa a área de texto antes de exibir novos resultados
         for interface in interfaces_names:
-            if interface != "":
-                result = consultar_ip(interface)
-                output_textbox.insert(ctk.END, result + "\n")
+            consultar_ip(interface, output_textbox)
         
-        plug = consultar_ip_plug()
-        output_textbox.insert(ctk.END, plug + "\n")
+        consultar_ip_plug(output_textbox)
 
     # Configuração da interface gráfica
     app = ctk.CTkToplevel(MainWindow)
