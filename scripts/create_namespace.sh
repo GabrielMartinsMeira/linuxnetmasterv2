@@ -1,7 +1,9 @@
-current_dir=$(pwd)  # get current working directory
-config_file="$current_dir/scripts/configuracoes.txt"
+#!/bin/bash
 
-interface_lan=$(grep "Interface LAN:" "$config_file" | cut -d':' -f2 | xargs)
+current_dir=$(pwd)  # get current working directory
+config_file="$current_dir/config/configuracoes.conf"
+
+interface_lan=$(grep "interface_lan = " "$config_file" | cut -d'=' -f2 | xargs)
 
 sudo ip netns add lan
 sudo ip link set ${interface_lan} netns lan

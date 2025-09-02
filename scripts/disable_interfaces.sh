@@ -2,13 +2,13 @@
 
 # Caminho para o arquivo de configuração
 current_dir=$(pwd)
-config_file="$current_dir/scripts/configuracoes.txt"
+config_file="$current_dir/config/configuracoes.conf"
 
 # Ler os valores do arquivo de configuração
-interface_ac=$(grep "Interface AC:" "$config_file" | cut -d':' -f2 | xargs)
-interface_ax=$(grep "Interface AX:" "$config_file" | cut -d':' -f2 | xargs)
-interface_usb=$(grep "Interface USB:" "$config_file" | cut -d':' -f2 | xargs)
-interface_lan=$(grep "Interface LAN:" "$config_file" | cut -d':' -f2 | xargs)
+interface_ac=$(grep "interface_ac =" "$config_file" | cut -d'=' -f2 | xargs)
+interface_ax=$(grep "interface_ax =" "$config_file" | cut -d'=' -f2 | xargs)
+interface_usb=$(grep "interface_usb =" "$config_file" | cut -d'=' -f2 | xargs)
+interface_lan=$(grep "interface_lan =" "$config_file" | cut -d'=' -f2 | xargs)
 
 echo ${interface_ac}, ${interface_ax}, ${interface_usb}
 # Definição passada como argumento
