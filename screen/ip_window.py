@@ -1,13 +1,14 @@
 import customtkinter as ctk
 import subprocess
 import threading
-from config.config import get_iperf_plug_server, load_interfaces
+from config.config import get_iperf_plug_server, load_interfaces, get_interfaces_types
 
 def openipview(MainWindow, button_ip):
     button_ip.configure(state="disabled")
     # Função para consultar o IP de uma interface usando ifconfig
-    def consultar_ip(interface, output_textbox):
+    def consultar_ip(interface, index, output_textbox):
         try:
+            interfaces_types = get_interfaces_types()
             result = subprocess.run(
                 ["ifconfig", interface],
                 capture_output=True,
@@ -18,13 +19,13 @@ def openipview(MainWindow, button_ip):
                 output = result.stdout
                 if 'inet ' in output:
                     ip_address = output.split('inet ')[1].split(' ')[0]
-                    output_textbox.insert(ctk.END, f"{interface}: {ip_address}" + "\n")
+                    output_textbox.insert(ctk.END, f"{interfaces_types[index]} ({interface}): {ip_address}" + "\n")
                 else:
-                    output_textbox.insert(ctk.END, f"{interface}: Sem IP atribuído" + "\n")
+                    output_textbox.insert(ctk.END, f"{interfaces_types[index]} ({interface}): Sem IP atribuído" + "\n")
             else:
-                output_textbox.insert(ctk.END, f"{interface}: Não foi possível consultar" + "\n")
+                output_textbox.insert(ctk.END, f"{interfaces_types[index]} ({interface}): Não foi possível consultar" + "\n")
         except subprocess.TimeoutExpired:
-            output_textbox.insert(ctk.END, f"{interface}: Timeout (3s)" + "\n")
+            output_textbox.insert(ctk.END, f"{interfaces_types[index]} ({interface}): Timeout (3s)" + "\n")
         
     def consultar_ip_plug(output_textbox):
         try:
@@ -51,8 +52,8 @@ def openipview(MainWindow, button_ip):
     def consultar_interfaces():
         interfaces_names = load_interfaces()
         output_textbox.delete(1.0, ctk.END)  # Limpa a área de texto antes de exibir novos resultados
-        for interface in interfaces_names:
-            consultar_ip(interface, output_textbox)
+        for index, interface in enumerate(interfaces_names):
+            consultar_ip(interface, index, output_textbox)
         
         consultar_ip_plug(output_textbox)
 

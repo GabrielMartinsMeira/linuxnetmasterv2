@@ -30,3 +30,7 @@ def write_interfaces(interfaces_names):
         config.set("Interfaces", interface, interfaces_names[index])
         with open(path.join(getcwd(), "config", "configuracoes.conf"), "w") as configfile:
             config.write(configfile)
+            
+def get_interfaces_types():
+    config = update_conf_file()
+    return config.options("Interfaces")
