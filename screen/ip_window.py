@@ -6,7 +6,7 @@ from config.config import get_iperf_plug_server, load_interfaces
 def openipview(MainWindow, button_ip):
     button_ip.configure(state="disabled")
     # Função para consultar o IP de uma interface usando ifconfig
-    def consultar_ip(interface):
+    def consultar_ip(interface, output_textbox):
         try:
             result = subprocess.run(
                 ["ifconfig", interface],
