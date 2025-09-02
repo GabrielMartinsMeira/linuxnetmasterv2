@@ -2,9 +2,10 @@ import customtkinter as ctk
 import subprocess
 from PIL import Image
 from os import path, getcwd
-from screen.config import open_new_window
-from screen.ips import openipview
 from threading import Thread
+from screen.config_window import open_new_window
+from screen.ip_window import openipview
+from config.config import set_iperf_plug_server
 
 # Configurações iniciais
 ctk.set_appearance_mode("dark")  # Modo escuro
@@ -36,6 +37,7 @@ def iperf_plug():
         print("Namespace criado")
         button_iperf.configure(state='disabled')
         button_iperf_plug.configure(state='disabled')
+        set_iperf_plug_server("True")
         process = subprocess.Popen(
                 ["gnome-terminal", "--wait", "--", "bash", "-c", "sudo ip netns exec lan iperf3 -s; exec bash"],  # Windows example
                 stdout=subprocess.PIPE,
@@ -47,6 +49,7 @@ def iperf_plug():
         process.wait()
         print("Terminal Iperf Fechado")
         subprocess.run(["/bin/bash", path.join(getcwd(), "scripts", "disable_namespace.sh")], check=True)
+        set_iperf_plug_server("False")
         button_iperf.configure(state='normal')
         button_iperf_plug.configure(state='normal')
         
